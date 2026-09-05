@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Our Little Date</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Parisienne&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #120914;
+  --pink: #f47b9b;
+  --pink2: #ffb1c5;
+  --text: #fff4f8;
+  --muted: #a98d9e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, #54203f 0%, transparent 38%),
+    radial-gradient(circle at 0% 100%, #32132d 0%, transparent 35%),
+    var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 14px;
+}
+
+.phone {
+  width: 100%;
+  max-width: 390px;
+  min-height: 680px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,166,197,.12);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(103,36,75,.18), transparent 45%),
+    #190d1c;
+  box-shadow: 0 20px 70px rgba(0,0,0,.35);
+}
+
+.progress {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.progress span {
+  height: 3px;
+  flex: 1;
+  border-radius: 10px;
+  background: #4a263e;
+  transition: .3s;
+}
+
+.progress span.active {
+  background: linear-gradient(90deg,#f06e98,#ffb0c8);
+}
+
+.back {
+  border: 0;
+  background: none;
+  color: #b899aa;
+  font-size: 11px;
+  padding: 4px 0;
+}
+
+.screen {
+  display: none;
+  min-height: 590px;
+  animation: fade .45s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* GAMBAR */
+
+.opening-icon {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  display: block;
+  margin: 35px auto 18px;
+}
+
+.date-icon {
+  width: 170px;
+  height: 170px;
+  object-fit: contain;
+  display: block;
+  margin: 20px auto 8px;
+}
+
+.ticket-icon {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  display: block;
+  margin: 10px auto 14px;
+}
+
+.pass-character img {
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  display: block;
+}
+
+/* TEXT */
+
+.title {
+  font-family: "Parisienne", cursive;
+  font-size: 42px;
+  line-height: 1.1;
+  font-weight: 400;
+  color: #ffb5ca;
+  text-align: center;
+  margin: 8px 0 22px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #a98d9e;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+/* BUTTON */
+
+.btn {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #9d3e68;
+  border-radius: 16px;
+  background: #251327;
+  color: #fff1f6;
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn.primary {
+  background: linear-gradient(135deg,#f47b9b,#ff9ab5);
+  border: none;
+  color: #42152a;
+  box-shadow: 0 10px 28px rgba(238,90,139,.2);
+}
+
+.btn.small {
+  width: auto;
+  padding: 12px 20px;
+}
+
+/* EFEK CAHAYA KECIL SAAT BUTTON DITEKAN */
+
+.btn::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: var(--click-x, 50%);
+  top: var(--click-y, 50%);
+  border-radius: 50%;
+  background: rgba(255,255,255,.85);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn.clicked::after {
+  animation: buttonLight .5s ease-out;
+}
+
+@keyframes buttonLight {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: .8;
+    box-shadow:
+      0 0 6px rgba(255,255,255,.8),
+      0 0 14px rgba(255,130,180,.6);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(9);
+    opacity: 0;
+    box-shadow:
+      0 0 18px rgba(255,255,255,.6),
+      0 0 30px rgba(255,130,180,.3);
+  }
+}
+
+.btn:active {
+  transform: scale(.98);
+}
+
+.btn.primary:active {
+  box-shadow:
+    0 0 7px rgba(255,220,235,.7),
+    0 0 16px rgba(244,123,155,.55);
+}
+
+.choice-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.choice-row .btn {
+  flex: 1;
+}
+
+.bottom-note {
+  margin-top: auto;
+  text-align: center;
+  color: #7e6274;
+  font-size: 10px;
+}
+
+/* DATE SCREEN */
+
+.date-title {
+  font-family: "Parisienne", cursive;
+  font-size: 37px;
+  text-align: center;
+  color: #ffb2c8;
+  font-weight: 400;
+  margin: 8px 0 20px;
+}
+
+.section-label {
+  color: #927385;
+  font-size: 10px;
+  margin: 16px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 7px;
+}
+
+.option {
+  min-height: 50px;
+  padding: 7px 4px;
+  border: 1px solid #382035;
+  border-radius: 13px;
+  background: #211225;
+  color: #fff0f5;
+  font-size: 11px;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.option small {
+  display: block;
+  color: #886b7c;
+  font-size: 9px;
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+.option.selected {
+  border-color: #e96e97;
+  background: #422039;
+}
+
+.times {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 6px;
+}
+
+.time {
+  padding: 10px 2px;
+  border: 1px solid #382035;
+  border-radius: 12px;
+  background: #211225;
+  color: #d7b5c7;
+  font-size: 9px;
+}
+
+.time span {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.time.selected {
+  border-color: #e96e97;
+  background: #422039;
+}
+
+.time.selected span {
+  color: #ffb1c7;
+}
+
+.date-footer {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.date-footer .btn {
+  flex: 1;
+}
+
+#nextDate {
+  opacity: .45;
+  pointer-events: none;
+}
+
+#nextDate.ready {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* DATE PASS CARD */
+
+.pass {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 25px;
+}
+
+.pass h1 {
+  font-family: "Parisienne", cursive;
+  color: #ffb4ca;
+  font-size: 40px;
+  font-weight: 400;
+  margin: 0 0 22px;
+}
+
+.pass-card {
+  width: 100%;
+  max-width: 340px;
+  min-height: 190px;
+  display: grid;
+  grid-template-columns: 42% 58%;
+  background: #fff0f6;
+  color: #5a2740;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 15px 40px rgba(0,0,0,.18);
+}
+
+/* SISI KIRI */
+
+.pass-left {
+  background: #ffd3e1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  position: relative;
+}
+
+.pass-left::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -1px;
+  height: 100%;
+  border-right: 2px dashed #f3a8bf;
+}
+
+.pass-character {
+  width: 74px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.pass-admit {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #b85c7d;
+  margin-bottom: 4px;
+}
+
+.pass-number {
+  font-size: 9px;
+  color: #c9859d;
+}
+
+/* SISI KANAN */
+
+.pass-right {
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.pass-head {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: #cf668b;
+  margin-bottom: 14px;
+}
+
+.pass-info {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 9px 8px;
+  font-size: 11px;
+}
+
+.pass-info strong {
+  color: #cf7895;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.pass-info span {
+  font-weight: 700;
+  color: #4f2739;
+}
+
+/* LUBANG TIKET */
+
+.pass-card::before,
+.pass-card::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #190d1c;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.pass-card::before {
+  left: -11px;
+}
+
+.pass-card::after {
+  right: -11px;
+}
+
+.pass-note {
+  text-align: center;
+  font-size: 10px;
+  color: #bd7896;
+  margin: 15px 0 0;
+}
+
+.pass-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+  width: 100%;
+}
+
+.pass-actions .btn {
+  flex: 1;
+}
+
+/* EMOJI BERTERBANGAN */
+
+.confetti {
+  position: absolute;
+  pointer-events: none;
+  opacity: .4;
+  animation: fall 6s linear infinite;
+  color: #ffb1c5;
+  font-size: 20px;
+}
+
+.confetti:nth-child(1) {
+  left: 7%;
+  top: 15%;
+  animation-delay: 0s;
+}
+
+.confetti:nth-child(2) {
+  left: 90%;
+  top: 27%;
+  animation-delay: 2s;
+}
+
+.confetti:nth-child(3) {
+  left: 15%;
+  top: 72%;
+  animation-delay: 1s;
+}
+
+.confetti:nth-child(4) {
+  left: 82%;
+  top: 82%;
+  animation-delay: 3s;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-20px) rotate(0);
+  }
+
+  100% {
+    transform: translateY(80px) rotate(360deg);
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 420px) {
+  .page {
+    padding: 0;
+  }
+
+  .phone {
+    max-width: none;
+    min-height: 100vh;
+    border-radius: 0;
+    border: none;
+    padding: 22px 18px;
+  }
+
+  .pass-card {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="page">
+  <div class="phone">
+
+    <!-- EMOJI BERTERBANGAN -->
+    <div class="confetti">♡</div>
+    <div class="confetti">✦</div>
+    <div class="confetti">♡</div>
+    <div class="confetti">✦</div>
+
+    <!-- PROGRESS -->
+    <div class="progress">
+      <span class="active"></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- SCREEN 1 -->
+    <section class="screen active" id="screen1">
+
+      <img
+        src="icon1.webp"
+        class="opening-icon"
+        alt="Icon opening"
+      >
+
+      <h1 class="title">
+        Will you go out<br>with me?
+      </h1>
+
+      <p class="subtitle">
+        There’s something I’ve been wanting to ask you...
+      </p>
+
+      <button class="btn primary" id="yesBtn">
+        Yes!
+      </button>
+
+      <div class="choice-row">
+        <button class="btn small" id="maybeBtn">
+          Are you sure?
+        </button>
+      </div>
+
+      <div class="bottom-note">
+        Made with love, just for you
+      </div>
+
+    </section>
+
+    <!-- SCREEN 2 -->
+    <section class="screen" id="screen2">
+
+      <button class="back" id="backBtn">
+        ← back
+      </button>
+
+      <img
+        src="icon2.webp"
+        class="date-icon"
+        alt="Icon date"
+      >
+
+      <h1 class="date-title">
+        Yay! When are you<br>free?
+      </h1>
+
+      <p class="subtitle" style="margin-bottom:8px;">
+        Pick a day and time for our little date
+      </p>
+
+      <div class="section-label">
+        Choose a day
+      </div>
+
+      <div class="options">
+
+        <button class="option" data-day="Today">
+          Today
+          <small id="todayDate"></small>
+        </button>
+
+        <button class="option" data-day="Tomorrow">
+          Tomorrow
+          <small id="tomorrowDate"></small>
+        </button>
+
+        <button class="option selected" data-day="Saturday">
+          Sat
+          <small>Sep 6</small>
+        </button>
+
+        <button class="option" data-day="Sunday">
+          Sun
+          <small>Sep 7</small>
+        </button>
+
+        <button class="option" data-day="Monday">
+          Mon
+          <small>Sep 8</small>
+        </button>
+
+        <button class="option" data-day="Surprise me">
+          Surprise me
+          <small>you choose</small>
+        </button>
+
+      </div>
+
+      <div class="section-label">
+        And around...
+      </div>
+
+      <div class="times">
+
+        <button class="time" data-time="Morning">
+          <span>Morning</span>
+          10:30
+        </button>
+
+        <button class="time" data-time="Afternoon">
+          <span>Afternoon</span>
+          3:00
+        </button>
+
+        <button class="time selected" data-time="Evening">
+          <span>Evening</span>
+          7:00
+        </button>
+
+        <button class="time" data-time="Late night">
+          <span>Late night</span>
+          9:30
+        </button>
+
+      </div>
+
+      <div class="date-footer">
+
+        <button class="btn" id="resetBtn">
+          Reset
+        </button>
+
+        <button class="btn primary" id="nextDate">
+          Continue
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- SCREEN 3 -->
+    <section class="screen" id="screen3">
+
+      <div class="pass">
+
+        <img
+          src="icon4.webp"
+          class="ticket-icon"
+          alt="Icon date pass"
+        >
+
+        <h1>
+          It’s a date!
+        </h1>
+
+        <div class="pass-card">
+
+          <!-- SISI KIRI -->
+          <div class="pass-left">
+
+            <div class="pass-character">
+              <img
+                src="icon3.webp"
+                alt="Icon ticket"
+              >
+            </div>
+
+            <div class="pass-admit">
+              ADMIT TWO
+            </div>
+
+            <div class="pass-number">
+              NO. 0826
+            </div>
+
+          </div>
+
+          <!-- SISI KANAN -->
+          <div class="pass-right">
+
+            <div class="pass-head">
+              DATE PASS
+            </div>
+
+            <div class="pass-info">
+
+              <strong>When</strong>
+              <span id="passDay">
+                Saturday, Sep 6
+              </span>
+
+              <strong>Time</strong>
+              <span id="passTime">
+                Evening · 7:00 pm
+              </span>
+
+              <strong>Where</strong>
+              <span>Coffee</span>
+
+              <strong>Bring</strong>
+              <span>Flowers</span>
+
+              <strong>Then</strong>
+              <span>Stargazing</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <p class="pass-note">
+          No need to be nervous, it’s just us.
+        </p>
+
+        <div class="pass-actions">
+
+          <button class="btn primary" id="againBtn">
+            Start again
+          </button>
+
+          <button class="btn" id="shareBtn">
+            Share
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+</div>
+
+<script>
+
+
+/* =========================
+   BACKGROUND MUSIC
+========================= */
+
+const bgMusic = document.getElementById("bgMusic");
+
+bgMusic.volume = 0.35;
+
+function startMusic() {
+  bgMusic.play().catch(() => {
+    console.log("Autoplay diblokir browser.");
+  });
+}
+
+/* Musik mulai ketika tombol pertama kali ditekan */
+document.getElementById("yesBtn").addEventListener("click", () => {
+  startMusic();
+});
+
+
+/* =========================
+   SCREEN NAVIGATION
+========================= */
+
+const screens = [
+  document.getElementById("screen1"),
+  document.getElementById("screen2"),
+  document.getElementById("screen3")
+];
+
+const progress = document.querySelectorAll(".progress span");
+
+let selectedDay = "Saturday";
+let selectedTime = "Evening";
+
+const timeLabels = {
+  "Morning": "Morning · 10:30 am",
+  "Afternoon": "Afternoon · 3:00 pm",
+  "Evening": "Evening · 7:00 pm",
+  "Late night": "Late night · 9:30 pm"
+};
+
+function showScreen(index) {
+  screens.forEach((screen, i) => {
+    screen.classList.toggle("active", i === index);
+  });
+
+  progress.forEach((bar, i) => {
+    bar.classList.toggle("active", i <= index);
+  });
+}
+
+/* =========================
+   EFEK BUTTON
+========================= */
+
+document.querySelectorAll(".btn").forEach(button => {
+  button.addEventListener("pointerdown", function(event) {
+    const rect = this.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    this.style.setProperty("--click-x", `${x}px`);
+    this.style.setProperty("--click-y", `${y}px`);
+
+    this.classList.remove("clicked");
+
+    void this.offsetWidth;
+
+    this.classList.add("clicked");
+
+    setTimeout(() => {
+      this.classList.remove("clicked");
+    }, 550);
+  });
+});
+
+/* =========================
+   OPEN DATE SCREEN
+========================= */
+
+document.getElementById("yesBtn").addEventListener("click", () => {
+  showScreen(1);
+});
+
+document.getElementById("maybeBtn").addEventListener("click", () => {
+  const btn = document.getElementById("maybeBtn");
+
+  btn.textContent = "Yes, I am!";
+  btn.classList.add("primary");
+});
+
+document.getElementById("backBtn").addEventListener("click", () => {
+  showScreen(0);
+});
+
+/* =========================
+   DATE SELECTION
+========================= */
+
+document.querySelectorAll(".option").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelectorAll(".option").forEach(b => {
+      b.classList.remove("selected");
+    });
+
+    btn.classList.add("selected");
+
+    selectedDay = btn.dataset.day;
+
+    document.getElementById("nextDate").classList.add("ready");
+  });
+});
+
+/* =========================
+   TIME SELECTION
+========================= */
+
+document.querySelectorAll(".time").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelectorAll(".time").forEach(b => {
+      b.classList.remove("selected");
+    });
+
+    btn.classList.add("selected");
+
+    selectedTime = btn.dataset.time;
+
+    document.getElementById("nextDate").classList.add("ready");
+  });
+});
+
+/* =========================
+   CONTINUE TO DATE PASS
+========================= */
+
+document.getElementById("nextDate").addEventListener("click", () => {
+
+  document.getElementById("passDay").textContent =
+    selectedDay + ", Sep 6";
+
+  document.getElementById("passTime").textContent =
+    timeLabels[selectedTime];
+
+  showScreen(2);
+});
+
+/* =========================
+   RESET
+========================= */
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+
+  selectedDay = "Saturday";
+  selectedTime = "Evening";
+
+  document.querySelectorAll(".option").forEach(btn => {
+    btn.classList.toggle(
+      "selected",
+      btn.dataset.day === "Saturday"
+    );
+  });
+
+  document.querySelectorAll(".time").forEach(btn => {
+    btn.classList.toggle(
+      "selected",
+      btn.dataset.time === "Evening"
+    );
+  });
+
+  document.getElementById("nextDate").classList.add("ready");
+});
+
+/* =========================
+   START AGAIN
+========================= */
+
+document.getElementById("againBtn").addEventListener("click", () => {
+  showScreen(0);
+});
+
+/* =========================
+   SHARE KE WHATSAPP
+========================= */
+
+document.getElementById("shareBtn").addEventListener("click", () => {
+
+  const webUrl = window.location.href;
+
+  if (
+    webUrl.startsWith("file://") ||
+    webUrl.includes("localhost") ||
+    webUrl.includes("127.0.0.1")
+  ) {
+    alert(
+      "Web ini harus di-upload ke Vercel terlebih dahulu agar bisa dibagikan melalui WhatsApp."
+    );
+
+    return;
+  }
+
+  const message = `Haii sayang 🤍
+
+Aku ada sesuatu buat kamu.
+Buka link ini yaa:
+
+${webUrl}`;
+
+  const whatsappUrl =
+    "https://wa.me/?text=" + encodeURIComponent(message);
+
+  window.open(whatsappUrl, "_blank");
+});
+
+/* =========================
+   TANGGAL OTOMATIS
+========================= */
+
+const today = new Date();
+
+const tomorrow = new Date(today);
+tomorrow.setDate(today.getDate() + 1);
+
+function formatDate(date) {
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric"
+  });
+}
+
+document.getElementById("todayDate").textContent =
+  formatDate(today);
+
+document.getElementById("tomorrowDate").textContent =
+  formatDate(tomorrow);
+
+</script>
+
+</body>
+</html>
